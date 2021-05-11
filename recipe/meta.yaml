@@ -21,7 +21,7 @@ requirements:
     - pip
   run:
     - mando >=0.6
-    - colorama>=0.4.1  # [py>=34]
+    - colorama>=0.4.1  # [py>34]
     - colorama==0.4.1  # [py<=34]
     - flake8-polyfill
     - python
