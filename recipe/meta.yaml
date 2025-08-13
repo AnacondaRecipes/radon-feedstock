@@ -1,37 +1,56 @@
-{% set version = "4.5.1" %}
+{% set name = "radon" %}
+{% set version = "6.0.1" %}
 
 package:
-  name: radon
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/r/radon/radon-{{ version }}.tar.gz
-  sha256: 188c3cbd7518472217bb7a4d60da6f7fd06c7c9e81f608b5973129a8916a81d4
+  url: https://pypi.org/packages/source/r/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: d1ac0053943a893878940fedc8b19ace70386fc9c9bf0a09229a44125ebf45b5
 
 build:
   number: 0
-  noarch: python
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<37]
   entry_points:
     - radon = radon:main
 
 requirements:
-  build:
+  host:
     - python
+    - setuptools
+    - wheel
     - pip
+    - poetry-core
   run:
-    - mando >=0.6
-    - colorama>=0.4.1  # [py>34]
-    - colorama==0.4.1  # [py<=34]
-    - flake8-polyfill
     - python
-    - future
+    - mando >=0.6,<0.8
+    - colorama >=0.4.1
+  run_constrained:
+    - tomli >=2.0.1
 
 test:
   imports:
     - radon
+    - radon.cli
+    - radon.cli.colors
+    - radon.cli.harvest
+    - radon.cli.tools
+    - radon.complexity
+    - radon.contrib.flake8
+    - radon.metrics
+    - radon.raw
+    - radon.visitors
+  requires:
+    - pip
+    - pytest >5.0
+    - pytest-mock
   commands:
-    - radon
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest --pyargs radon.tests
+    - radon --help
 
 about:
   home: https://github.com/rubik/radon
@@ -47,6 +66,7 @@ about:
     - Halstead metrics (all of them)
     - Maintainability Index (the one used in Visual Studio)
   doc_url: https://radon.readthedocs.io
+  dev_url: https://github.com/rubik/radon
 
 extra:
   recipe-maintainers:
