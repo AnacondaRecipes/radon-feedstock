@@ -27,7 +27,6 @@ requirements:
     - python
     - mando >=0.6,<0.8
     - colorama >=0.4.1
-    - colorama==0.4.1  # [py<=34]
   run_constrained:
     - tomli >=2.0.1
 
@@ -48,10 +47,10 @@ test:
     - pytest >5.0
     - pytest-mock
   commands:
-    - radon --help
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - pytest --pyargs radon.tests
+    - radon --help
 
 about:
   home: https://github.com/rubik/radon
@@ -67,6 +66,7 @@ about:
     - Halstead metrics (all of them)
     - Maintainability Index (the one used in Visual Studio)
   doc_url: https://radon.readthedocs.io
+  dev_url: https://github.com/rubik/radon
 
 extra:
   recipe-maintainers:
